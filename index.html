@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Studify - Seu Hub Pessoal de Organização Acadêmica</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-container">
+            <div class="logo">
+                <img src="logo.png" alt="Studify Logo" class="logo-img">
+                <span class="logo-text">Studify</span>
+            </div>
+            <nav class="nav">
+                <a href="#" class="nav-link active" data-section="dashboard">Dashboard</a>
+                <a href="#" class="nav-link" data-section="subjects">Matérias</a>
+                <a href="#" class="nav-link" data-section="calendar">Calendário</a>
+                <a href="#" class="nav-link" data-section="tasks">Tarefas</a>
+            </nav>
+            <div class="profile-menu">
+                <button class="profile-btn" id="profileBtn">
+                    <i class="fas fa-user-circle"></i>
+                    <span id="userName">Estudante</span>
+                </button>
+                <div class="profile-dropdown" id="profileDropdown">
+                    <a href="#" class="dropdown-item">Configurações</a>
+                    <a href="#" class="dropdown-item">Perfil</a>
+                    <hr>
+                    <a href="#" class="dropdown-item logout">Sair</a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Dashboard Section -->
+        <section id="dashboard" class="section active">
+            <!-- Greeting and Date -->
+            <div class="greeting-section">
+                <h1 id="greeting" class="greeting-title">Bom dia, Estudante! 👋</h1>
+                <p id="currentDate" class="current-date"></p>
+            </div>
+
+            <!-- Daily Focus Card -->
+            <div id="dailyFocusContainer" class="daily-focus-card">
+                <div class="focus-icon">🎯</div>
+                <div class="focus-content">
+                    <h2>Seu Foco Hoje</h2>
+                    <p id="focusTitle" class="focus-title">Nenhum foco definido para hoje</p>
+                    <button class="btn btn-primary" id="setFocusBtn">Definir Foco</button>
+                </div>
+            </div>
+
+            <!-- Statistics Row -->
+            <div class="statistics-row">
+                <div class="stat-card">
+                    <div class="stat-icon" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+                        <i class="fas fa-book"></i>
+                    </div>
+                    <div class="stat-content">
+                        <h3>Tarefas Concluídas</h3>
+                        <p class="stat-value" id="tasksCompletedStat">0</p>
+                        <span class="stat-subtitle">esta semana</span>
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-icon" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);">
+                        <i class="fas fa-fire"></i>
+                    </div>
+                    <div class="stat-content">
+                        <h3>Sequência de Foco</h3>
+                        <p class="stat-value" id="streakStat">0</p>
+                        <span class="stat-subtitle">dias seguidos</span>
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-icon" style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);">
+                        <i class="fas fa-clock"></i>
+                    </div>
+                    <div class="stat-content">
+                        <h3>Pomodoros Hoje</h3>
+                        <p class="stat-value" id="pomodorosStat">0</p>
+                        <span class="stat-subtitle">sessões completadas</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Main Grid -->
+            <div class="dashboard-grid">
+                <!-- Left Column -->
+                <div class="left-column">
+                    <!-- Upcoming Deadlines -->
+                    <div class="card">
+                        <div class="card-header">
+                            <i class="fas fa-calendar"></i>
+                            <h2>Próximos Prazos</h2>
+                        </div>
+                        <div class="card-content">
+                            <div id="deadlinesList" class="deadlines-list">
+                                <p class="empty-state">Nenhum prazo próximo 🎉</p>
+                            </div>
+                            <button class="btn btn-secondary" id="viewAllDeadlinesBtn">Ver Todos</button>
+                        </div>
+                    </div>
+
+                    <!-- Pomodoro Timer -->
+                    <div class="card pomodoro-card">
+                        <div class="card-header">
+                            <i class="fas fa-hourglass-end"></i>
+                            <h2>Técnica Pomodoro</h2>
+                        </div>
+                        <div class="card-content">
+                            <div class="timer-display" id="timerDisplay">25:00</div>
+                            <div class="timer-buttons">
+                                <button class="btn btn-timer" id="btn25" data-duration="25">
+                                    Trabalho<br><small>(25 min)</small>
+                                </button>
+                                <button class="btn btn-timer" id="btn5" data-duration="5">
+                                    Pausa<br><small>(5 min)</small>
+                                </button>
+                                <button class="btn btn-timer" id="btn15" data-duration="15">
+                                    Pausa Longa<br><small>(15 min)</small>
+                                </button>
+                            </div>
+                            <button class="btn btn-primary btn-block" id="startPomodoroBtn">
+                                <i class="fas fa-play"></i> Iniciar Pomodoro
+                            </button>
+                            <button class="btn btn-secondary btn-block" id="resetPomodoroBtn">
+                                <i class="fas fa-redo"></i> Resetar
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right Column -->
+                <div class="right-column">
+                    <!-- Subjects -->
+                    <div class="card">
+                        <div class="card-header">
+                            <i class="fas fa-book-open"></i>
+                            <h2>Suas Matérias</h2>
+                            <button class="btn btn-icon" id="addSubjectBtn" title="Adicionar matéria">
+                                <i class="fas fa-plus"></i>
+                            </button>
+                        </div>
+                        <div class="card-content">
+                            <div id="subjectsList" class="subjects-grid">
+                                <p class="empty-state">Nenhuma matéria adicionada</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- CTA Button -->
+                    <button class="btn btn-cta" id="newTaskBtn">
+                        <i class="fas fa-plus"></i> Nova Tarefa
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Subjects Section -->
+        <section id="subjects" class="section">
+            <h1>Minhas Matérias</h1>
+            <div id="subjectsPageList" class="subjects-page-list">
+                <!-- Subjects will be populated here -->
+            </div>
+        </section>
+
+        <!-- Calendar Section -->
+        <section id="calendar" class="section">
+            <h1>Calendário</h1>
+            <div id="calendarContainer" class="calendar-container">
+                <!-- Calendar will be populated here -->
+            </div>
+        </section>
+
+        <!-- Tasks Section -->
+        <section id="tasks" class="section">
+            <h1>Minhas Tarefas</h1>
+            <div id="tasksPageList" class="tasks-page-list">
+                <!-- Tasks will be populated here -->
+            </div>
+        </section>
+    </main>
+
+    <!-- Task Modal -->
+    <div id="taskModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Nova Tarefa</h2>
+                <button class="close-btn" id="closeTaskModal">&times;</button>
+            </div>
+            <form id="taskForm" class="form">
+                <div class="form-group">
+                    <label for="taskTitle">Título da Tarefa *</label>
+                    <input type="text" id="taskTitle" required placeholder="Ex: Resolver lista de exercícios">
+                </div>
+
+                <div class="form-group">
+                    <label for="taskSubject">Matéria *</label>
+                    <select id="taskSubject" required>
+                        <option value="">Selecione uma matéria</option>
+                    </select>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="taskPriority">Prioridade</label>
+                        <select id="taskPriority">
+                            <option value="low">Baixa</option>
+                            <option value="medium" selected>Média</option>
+                            <option value="high">Alta</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="taskDueDate">Data de Entrega</label>
+                        <input type="datetime-local" id="taskDueDate">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="taskDescription">Descrição</label>
+                    <textarea id="taskDescription" placeholder="Adicione detalhes sobre a tarefa..."></textarea>
+                </div>
+
+                <div class="form-actions">
+                    <button type="button" class="btn btn-secondary" id="cancelTaskBtn">Cancelar</button>
+                    <button type="submit" class="btn btn-primary">Criar Tarefa</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Subject Modal -->
+    <div id="subjectModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Nova Matéria</h2>
+                <button class="close-btn" id="closeSubjectModal">&times;</button>
+            </div>
+            <form id="subjectForm" class="form">
+                <div class="form-group">
+                    <label for="subjectName">Nome da Matéria *</label>
+                    <input type="text" id="subjectName" required placeholder="Ex: Cálculo I">
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="subjectColor">Cor</label>
+                        <input type="color" id="subjectColor" value="#3B82F6">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="subjectIcon">Ícone</label>
+                        <input type="text" id="subjectIcon" value="📚" maxlength="2">
+                    </div>
+                </div>
+
+                <div class="form-actions">
+                    <button type="button" class="btn btn-secondary" id="cancelSubjectBtn">Cancelar</button>
+                    <button type="submit" class="btn btn-primary">Criar Matéria</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Focus Modal -->
+    <div id="focusModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Definir Foco do Dia</h2>
+                <button class="close-btn" id="closeFocusModal">&times;</button>
+            </div>
+            <form id="focusForm" class="form">
+                <div class="form-group">
+                    <label for="focusTitle">O que você quer focar hoje? *</label>
+                    <input type="text" id="focusTitle" required placeholder="Ex: Estudar para prova de Cálculo">
+                </div>
+
+                <div class="form-group">
+                    <label for="focusDescription">Descrição (opcional)</label>
+                    <textarea id="focusDescription" placeholder="Adicione detalhes sobre seu foco..."></textarea>
+                </div>
+
+                <div class="form-actions">
+                    <button type="button" class="btn btn-secondary" id="cancelFocusBtn">Cancelar</button>
+                    <button type="submit" class="btn btn-primary">Definir Foco</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Overlay -->
+    <div id="overlay" class="overlay"></div>
+
+    <script src="script.js"></script>
+</body>
+</html>
+
