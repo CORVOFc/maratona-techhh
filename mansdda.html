@@ -1,0 +1,756 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Studify - Seu Hub de Organização Acadêmica</title>
+    <style>
+        :root {
+            --primary: #4361ee;
+            --secondary: #3a0ca3;
+            --accent: #4cc9f0;
+            --light: #f8f9fa;
+            --dark: #212529;
+            --success: #4bb543;
+            --warning: #ffc107;
+            --danger: #dc3545;
+            --gray: #6c757d;
+            --light-gray: #e9ecef;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f5f7fb;
+            color: var(--dark);
+            line-height: 1.6;
+        }
+        
+        .container {
+            display: grid;
+            grid-template-columns: 250px 1fr;
+            grid-template-rows: 70px 1fr;
+            grid-template-areas: 
+                "header header"
+                "sidebar main";
+            min-height: 100vh;
+        }
+        
+        /* Header */
+        header {
+            grid-area: header;
+            background-color: white;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 2rem;
+            z-index: 100;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 700;
+            font-size: 1.5rem;
+            color: var(--primary);
+        }
+        
+        .logo-icon {
+            background-color: var(--primary);
+            color: white;
+            width: 35px;
+            height: 35px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+        }
+        
+        nav a {
+            text-decoration: none;
+            color: var(--dark);
+            font-weight: 500;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            transition: all 0.3s ease;
+        }
+        
+        nav a:hover, nav a.active {
+            background-color: var(--light-gray);
+            color: var(--primary);
+        }
+        
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: var(--primary);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+        
+        /* Sidebar */
+        .sidebar {
+            grid-area: sidebar;
+            background-color: white;
+            padding: 2rem 1rem;
+            box-shadow: 2px 0 10px rgba(0, 0, 0, 0.05);
+        }
+        
+        .sidebar-menu {
+            list-style: none;
+            margin-top: 2rem;
+        }
+        
+        .sidebar-menu li {
+            margin-bottom: 1rem;
+        }
+        
+        .sidebar-menu a {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 0.8rem 1rem;
+            text-decoration: none;
+            color: var(--dark);
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+        
+        .sidebar-menu a:hover, .sidebar-menu a.active {
+            background-color: var(--primary);
+            color: white;
+        }
+        
+        /* Main Content */
+        main {
+            grid-area: main;
+            padding: 2rem;
+            overflow-y: auto;
+        }
+        
+        .greeting-section {
+            margin-bottom: 2rem;
+        }
+        
+        .greeting {
+            font-size: 1.8rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+        
+        .date {
+            color: var(--gray);
+            font-size: 1rem;
+        }
+        
+        .focus-card {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 1.5rem;
+            border-radius: 12px;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 15px rgba(67, 97, 238, 0.3);
+        }
+        
+        .focus-card h3 {
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 2rem;
+        }
+        
+        .card {
+            background-color: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+            margin-bottom: 1.5rem;
+        }
+        
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+        
+        .card-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+        }
+        
+        .btn {
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            border: none;
+            background-color: var(--light-gray);
+            color: var(--dark);
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-primary {
+            background-color: var(--primary);
+            color: white;
+        }
+        
+        .btn:hover {
+            opacity: 0.9;
+            transform: translateY(-2px);
+        }
+        
+        .deadline-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 0;
+            border-bottom: 1px solid var(--light-gray);
+        }
+        
+        .deadline-item:last-child {
+            border-bottom: none;
+        }
+        
+        .deadline-info h4 {
+            margin-bottom: 0.3rem;
+        }
+        
+        .deadline-meta {
+            display: flex;
+            gap: 1rem;
+            color: var(--gray);
+            font-size: 0.9rem;
+        }
+        
+        .subject-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+            gap: 1rem;
+        }
+        
+        .subject-card {
+            background-color: var(--light);
+            border-radius: 10px;
+            padding: 1.5rem 1rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .subject-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .subject-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 0.8rem;
+            font-size: 1.5rem;
+        }
+        
+        .pomodoro-timer {
+            text-align: center;
+            padding: 1.5rem;
+        }
+        
+        .timer-display {
+            font-size: 3rem;
+            font-weight: 700;
+            margin: 1.5rem 0;
+            color: var(--primary);
+        }
+        
+        .timer-controls {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .progress-section {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 1.5rem;
+        }
+        
+        .progress-item {
+            text-align: center;
+        }
+        
+        .progress-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+        
+        .progress-label {
+            font-size: 0.9rem;
+            color: var(--gray);
+        }
+        
+        .floating-btn {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background-color: var(--primary);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            box-shadow: 0 4px 15px rgba(67, 97, 238, 0.4);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            z-index: 1000;
+        }
+        
+        .floating-btn:hover {
+            transform: scale(1.1);
+        }
+        
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .modal-content {
+            background-color: white;
+            border-radius: 12px;
+            width: 90%;
+            max-width: 500px;
+            padding: 2rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+        
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+        
+        .close-modal {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--gray);
+        }
+        
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+        
+        .form-control {
+            width: 100%;
+            padding: 0.8rem 1rem;
+            border: 1px solid var(--light-gray);
+            border-radius: 6px;
+            font-size: 1rem;
+        }
+        
+        .focus-mode {
+            background-color: #1a1a2e;
+            color: white;
+        }
+        
+        .focus-mode .card, .focus-mode header, .focus-mode .sidebar {
+            background-color: #16213e;
+            color: white;
+        }
+        
+        .focus-mode .card {
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        }
+        
+        @media (max-width: 992px) {
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .container {
+                grid-template-columns: 1fr;
+                grid-template-areas: 
+                    "header"
+                    "main";
+            }
+            
+            .sidebar {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header>
+            <div class="logo">
+                <div class="logo-icon">S</div>
+                <span>Studify</span>
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="#" class="active">Dashboard</a></li>
+                    <li><a href="#">Matérias</a></li>
+                    <li><a href="#">Calendário</a></li>
+                    <li><a href="#">Tarefas</a></li>
+                </ul>
+            </nav>
+            <div class="user-profile">
+                <div class="avatar">JP</div>
+                <span>João Pereira</span>
+            </div>
+        </header>
+        
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <ul class="sidebar-menu">
+                <li><a href="#" class="active"><span>📊</span> Dashboard</a></li>
+                <li><a href="#"><span>📚</span> Matérias</a></li>
+                <li><a href="#"><span>📅</span> Calendário</a></li>
+                <li><a href="#"><span>✅</span> Tarefas</a></li>
+                <li><a href="#"><span>📝</span> Anotações</a></li>
+                <li><a href="#"><span>📈</span> Estatísticas</a></li>
+                <li><a href="#"><span>⚙️</span> Configurações</a></li>
+            </ul>
+        </aside>
+        
+        <!-- Main Content -->
+        <main>
+            <div class="greeting-section">
+                <h1 class="greeting">Bom dia, João!</h1>
+                <p class="date" id="current-date">Segunda-feira, 15 de Maio de 2023</p>
+            </div>
+            
+            <div class="focus-card">
+                <h3><span>🎯</span> Seu foco do dia</h3>
+                <p>Finalizar o rascunho do trabalho de História e revisar os exercícios de Cálculo I.</p>
+            </div>
+            
+            <div class="dashboard-grid">
+                <div class="left-column">
+                    <!-- Próximos Prazos -->
+                    <div class="card">
+                        <div class="card-header">
+                            <h2 class="card-title">Próximos Prazos</h2>
+                            <button class="btn">Ver Todos</button>
+                        </div>
+                        <div class="deadline-list">
+                            <div class="deadline-item">
+                                <div class="deadline-info">
+                                    <h4>Prova de Cálculo I</h4>
+                                    <div class="deadline-meta">
+                                        <span>Cálculo I</span>
+                                        <span>18 de Maio</span>
+                                    </div>
+                                </div>
+                                <button class="btn btn-primary">Detalhes</button>
+                            </div>
+                            <div class="deadline-item">
+                                <div class="deadline-info">
+                                    <h4>Entrega do Trabalho de História</h4>
+                                    <div class="deadline-meta">
+                                        <span>História</span>
+                                        <span>20 de Maio</span>
+                                    </div>
+                                </div>
+                                <button class="btn btn-primary">Detalhes</button>
+                            </div>
+                            <div class="deadline-item">
+                                <div class="deadline-info">
+                                    <h4>Apresentação de Química</h4>
+                                    <div class="deadline-meta">
+                                        <span>Química Orgânica</span>
+                                        <span>22 de Maio</span>
+                                    </div>
+                                </div>
+                                <button class="btn btn-primary">Detalhes</button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Suas Matérias -->
+                    <div class="card">
+                        <div class="card-header">
+                            <h2 class="card-title">Suas Matérias</h2>
+                            <button class="btn">+ Adicionar</button>
+                        </div>
+                        <div class="subject-grid">
+                            <div class="subject-card">
+                                <div class="subject-icon" style="background-color: #4361ee;">
+                                    <span>∫</span>
+                                </div>
+                                <h4>Cálculo I</h4>
+                            </div>
+                            <div class="subject-card">
+                                <div class="subject-icon" style="background-color: #3a0ca3;">
+                                    <span>H</span>
+                                </div>
+                                <h4>História</h4>
+                            </div>
+                            <div class="subject-card">
+                                <div class="subject-icon" style="background-color: #4cc9f0;">
+                                    <span>Q</span>
+                                </div>
+                                <h4>Química</h4>
+                            </div>
+                            <div class="subject-card">
+                                <div class="subject-icon" style="background-color: #f72585;">
+                                    <span>P</span>
+                                </div>
+                                <h4>Programação</h4>
+                            </div>
+                            <div class="subject-card">
+                                <div class="subject-icon" style="background-color: #7209b7;">
+                                    <span>L</span>
+                                </div>
+                                <h4>Literatura</h4>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="right-column">
+                    <!-- Técnica Pomodoro -->
+                    <div class="card">
+                        <div class="card-header">
+                            <h2 class="card-title">Técnica Pomodoro</h2>
+                        </div>
+                        <div class="pomodoro-timer">
+                            <div class="timer-display" id="timer">25:00</div>
+                            <div class="timer-controls">
+                                <button class="btn btn-primary" id="start-pomodoro">Iniciar (25min)</button>
+                                <button class="btn" id="short-break">Pausa Curta (5min)</button>
+                            </div>
+                            <button class="btn" id="long-break">Pausa Longa (15min)</button>
+                        </div>
+                    </div>
+                    
+                    <!-- Estatísticas -->
+                    <div class="card">
+                        <div class="card-header">
+                            <h2 class="card-title">Seu Progresso</h2>
+                        </div>
+                        <div class="progress-section">
+                            <div class="progress-item">
+                                <div class="progress-value">8/10</div>
+                                <div class="progress-label">Tarefas da Semana</div>
+                            </div>
+                            <div class="progress-item">
+                                <div class="progress-value">3</div>
+                                <div class="progress-label">Dias de Foco</div>
+                            </div>
+                            <div class="progress-item">
+                                <div class="progress-value">75%</div>
+                                <div class="progress-label">Progresso Geral</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+    
+    <!-- Botão Flutuante -->
+    <div class="floating-btn" id="add-task-btn">+</div>
+    
+    <!-- Modal para Adicionar Tarefa -->
+    <div class="modal" id="task-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Adicionar Nova Tarefa</h2>
+                <button class="close-modal">&times;</button>
+            </div>
+            <form id="task-form">
+                <div class="form-group">
+                    <label for="task-title">Título da Tarefa</label>
+                    <input type="text" id="task-title" class="form-control" placeholder="Ex: Resolver lista de exercícios 5">
+                </div>
+                <div class="form-group">
+                    <label for="task-subject">Matéria</label>
+                    <select id="task-subject" class="form-control">
+                        <option value="">Selecione uma matéria</option>
+                        <option value="calculo">Cálculo I</option>
+                        <option value="historia">História</option>
+                        <option value="quimica">Química</option>
+                        <option value="programacao">Programação</option>
+                        <option value="literatura">Literatura</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="task-due-date">Data de Entrega</label>
+                    <input type="date" id="task-due-date" class="form-control">
+                </div>
+                <div class="form-group">
+                    <label for="task-priority">Prioridade</label>
+                    <select id="task-priority" class="form-control">
+                        <option value="baixa">Baixa</option>
+                        <option value="media">Média</option>
+                        <option value="alta">Alta</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn btn-primary" style="width: 100%;">Adicionar Tarefa</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Atualizar data atual
+        const currentDateElement = document.getElementById('current-date');
+        const now = new Date();
+        const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+        currentDateElement.textContent = now.toLocaleDateString('pt-BR', options);
+        
+        // Timer Pomodoro
+        const timerDisplay = document.getElementById('timer');
+        const startPomodoroBtn = document.getElementById('start-pomodoro');
+        const shortBreakBtn = document.getElementById('short-break');
+        const longBreakBtn = document.getElementById('long-break');
+        
+        let timer;
+        let minutes = 25;
+        let seconds = 0;
+        let isRunning = false;
+        
+        function updateTimerDisplay() {
+            timerDisplay.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+        }
+        
+        function startTimer(durationMin) {
+            if (isRunning) {
+                clearInterval(timer);
+            }
+            
+            minutes = durationMin;
+            seconds = 0;
+            isRunning = true;
+            
+            updateTimerDisplay();
+            
+            timer = setInterval(() => {
+                if (seconds === 0) {
+                    if (minutes === 0) {
+                        clearInterval(timer);
+                        isRunning = false;
+                        alert('Tempo esgotado!');
+                        return;
+                    }
+                    minutes--;
+                    seconds = 59;
+                } else {
+                    seconds--;
+                }
+                
+                updateTimerDisplay();
+            }, 1000);
+        }
+        
+        startPomodoroBtn.addEventListener('click', () => {
+            startTimer(25);
+            document.body.classList.add('focus-mode');
+        });
+        
+        shortBreakBtn.addEventListener('click', () => {
+            startTimer(5);
+            document.body.classList.remove('focus-mode');
+        });
+        
+        longBreakBtn.addEventListener('click', () => {
+            startTimer(15);
+            document.body.classList.remove('focus-mode');
+        });
+        
+        // Modal de Adicionar Tarefa
+        const addTaskBtn = document.getElementById('add-task-btn');
+        const taskModal = document.getElementById('task-modal');
+        const closeModalBtn = document.querySelector('.close-modal');
+        const taskForm = document.getElementById('task-form');
+        
+        addTaskBtn.addEventListener('click', () => {
+            taskModal.style.display = 'flex';
+        });
+        
+        closeModalBtn.addEventListener('click', () => {
+            taskModal.style.display = 'none';
+        });
+        
+        window.addEventListener('click', (e) => {
+            if (e.target === taskModal) {
+                taskModal.style.display = 'none';
+            }
+        });
+        
+        taskForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const title = document.getElementById('task-title').value;
+            const subject = document.getElementById('task-subject').value;
+            const dueDate = document.getElementById('task-due-date').value;
+            const priority = document.getElementById('task-priority').value;
+            
+            // Aqui você normalmente enviaria os dados para o backend
+            console.log('Nova tarefa:', { title, subject, dueDate, priority });
+            
+            alert('Tarefa adicionada com sucesso!');
+            taskModal.style.display = 'none';
+            taskForm.reset();
+        });
+        
+        // Inicializar o display do timer
+        updateTimerDisplay();
+    </script>
+</body>
+</html>
